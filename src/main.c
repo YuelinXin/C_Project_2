@@ -4,6 +4,14 @@
 
 #include <SDL2/SDL.h>
 
+
+const int WINDOW_WIDTH = 640;
+const int WINDOW_HEIGHT = 480;
+
+// ======================================================================
+// run the main program with ./build/debug/exe
+// ======================================================================
+
 int main( void )
 {
     if ( SDL_Init( SDL_INIT_VIDEO ) < 0 )

@@ -16,7 +16,7 @@
 // program parameters
 // ======================================================================
 const int WINDOW_WIDTH = 640;
-const int WINDOW_HEIGHT = 480;
+const int WINDOW_HEIGHT = 640;
 // ======================================================================
 
 
@@ -86,8 +86,21 @@ int main( void )
         SDL_RenderCopy( rend, texture, NULL, NULL );
         SDL_RenderPresent( rend );
 
+        SDL_Event eve;
+        int quit = 0;
+        while( !quit )
+        {
+            while ( SDL_PollEvent( &eve ) )
+            {
+                if ( eve.type == SDL_QUIT )
+                {
+                    quit = 1;
+                }
+            }
+        }
+
         // wait a few seconds
-        SDL_Delay( 5000 );
+        // SDL_Delay( 5000 );
 
         // clean up resources before exiting
         SDL_DestroyTexture( texture );
@@ -95,7 +108,7 @@ int main( void )
 
         SDL_DestroyWindow( window );
         SDL_Quit();
-        printf( "Window closed" );
+        printf( "Program terminated" );
     }
     // SDL_Quit();
     return 0;

@@ -80,12 +80,16 @@ int main( void )
         }
 
         // clear the window
+        // ======================================================================
         SDL_RenderClear( rend );
 
         // draw the image to the window
+        // ======================================================================
         SDL_RenderCopy( rend, texture, NULL, NULL );
         SDL_RenderPresent( rend );
 
+        // create event loop
+        // ======================================================================
         SDL_Event eve;
         int quit = 0;
         while( !quit )
@@ -96,20 +100,20 @@ int main( void )
                 {
                     quit = 1;
                 }
+                if ( eve.button.button == SDL_BUTTON_LEFT )
+                {
+                    printf("left\n");
+                }
             }
         }
 
-        // wait a few seconds
-        // SDL_Delay( 5000 );
-
         // clean up resources before exiting
+        // ======================================================================
         SDL_DestroyTexture( texture );
         SDL_DestroyRenderer ( rend );
-
         SDL_DestroyWindow( window );
         SDL_Quit();
-        printf( "Program terminated" );
+        printf( "Program terminated\n" );
     }
-    // SDL_Quit();
     return 0;
 }

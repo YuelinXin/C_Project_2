@@ -1,6 +1,6 @@
 /**
-* This program is the implementation of Conway's Game of Life in C.
-* This program uses the SDL2 library to display all the content and views.
+* This program is the implementation of Conway's Game of Life in C
+* This program uses the SDL2 library to display all the content and views
 *
 * Run the main program with "sh run.sh"
 * This command will auto compile the program using the Makefile, 
@@ -12,9 +12,15 @@
 * Organization URL: https://www.miraclefactory.co/
 **/
 
+/**
+* This file is the used to invoke the main thread of the program (UI thread),
+* and to take user inputs
+**/
+
 // head files
 // ======================================================================
-#include "board.h"
+#include "game.h"
+#include "util.h"
 // ======================================================================
 
 // program parameters
@@ -52,7 +58,7 @@ int main( void )
         SDL_Renderer *rend = SDL_CreateRenderer( window, -1, render_flags );
         if ( !rend )
         {
-            fprintf( stderr, "error trying to create a renderer: %s\n", SDL_GetError() );
+            fprintf( stderr, "Error trying to create a renderer: %s\n", SDL_GetError() );
             SDL_DestroyWindow( window );
             SDL_Quit();
             return 1;
@@ -60,10 +66,10 @@ int main( void )
 
         // create surface
         // ======================================================================
-        SDL_Surface *surface = IMG_Load( "resources/mf.png" );
+        SDL_Surface *surface = IMG_Load( "resources/images/mf.png" );
         if ( !surface )
         {
-            fprintf( stderr, "error creating a surface: %s\n", SDL_GetError() );
+            fprintf( stderr, "Error creating a surface: %s\n", SDL_GetError() );
             SDL_DestroyRenderer( rend );
             SDL_DestroyWindow( window );
             SDL_Quit();
@@ -76,7 +82,7 @@ int main( void )
         SDL_FreeSurface( surface );
         if ( !texture )
         {
-            fprintf( stderr, "error creating a texture: %s\n", SDL_GetError() );
+            fprintf( stderr, "Error creating a texture: %s\n", SDL_GetError() );
             SDL_DestroyRenderer( rend );
             SDL_DestroyWindow( window );
             SDL_Quit();
@@ -95,7 +101,7 @@ int main( void )
         // create event loop
         // ======================================================================
         SDL_Event eve;
-        int quit = 0;
+        int quit = FALSE;
         while( !quit )
         {
             while ( SDL_PollEvent( &eve ) )

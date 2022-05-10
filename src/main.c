@@ -1,17 +1,21 @@
+/**
+* This program is the implementation of Conway's Game of Life in C.
+* This program uses the SDL2 library to display all the content and views.
+*
+* Run the main program with "sh run.sh"
+* This command will auto compile the program using the Makefile, 
+* and run the program "./build/debug/exe"
+* 
+* Authorship:       Yuelin Xin
+* Affiliation:      School of Computing, University of Leeds
+* Organization:     MiracleFactory
+* Organization URL: https://www.miraclefactory.co/
+**/
+
+// head files
 // ======================================================================
-// run the main program with ```sh run.sh```
-// this command will auto compile the program using Makefile, 
-// and run the program ./build/debug/exe
+#include "board.h"
 // ======================================================================
-
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-
 
 // program parameters
 // ======================================================================
@@ -24,12 +28,12 @@ int main( void )
 {
     if ( SDL_Init( SDL_INIT_VIDEO ) < 0 )
     {
-        printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
+        fprintf( stderr, "SDL could not be initialized, SDL_Error: %s\n", SDL_GetError() );
         return 1;
     }
     else
     {
-        printf( "SDL initialized!\n" );
+        printf( "SDL initialized\n" );
 
         // create window
         // ======================================================================
@@ -37,7 +41,7 @@ int main( void )
             SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN );
         if ( window == NULL )
         {
-            printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
+            fprintf( stderr, "Window could not be created, SDL_Error: %s\n", SDL_GetError() );
             SDL_Quit();
             return 1;
         }
@@ -48,7 +52,7 @@ int main( void )
         SDL_Renderer *rend = SDL_CreateRenderer( window, -1, render_flags );
         if ( !rend )
         {
-            printf( "error trying to create a renderer: %s\n", SDL_GetError() );
+            fprintf( stderr, "error trying to create a renderer: %s\n", SDL_GetError() );
             SDL_DestroyWindow( window );
             SDL_Quit();
             return 1;
@@ -59,7 +63,7 @@ int main( void )
         SDL_Surface *surface = IMG_Load( "resources/mf.png" );
         if ( !surface )
         {
-            printf( "error creating a surface: %s\n", SDL_GetError() );
+            fprintf( stderr, "error creating a surface: %s\n", SDL_GetError() );
             SDL_DestroyRenderer( rend );
             SDL_DestroyWindow( window );
             SDL_Quit();
@@ -72,7 +76,7 @@ int main( void )
         SDL_FreeSurface( surface );
         if ( !texture )
         {
-            printf( "error creating a texture: %s\n", SDL_GetError() );
+            fprintf( stderr, "error creating a texture: %s\n", SDL_GetError() );
             SDL_DestroyRenderer( rend );
             SDL_DestroyWindow( window );
             SDL_Quit();

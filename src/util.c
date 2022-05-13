@@ -12,8 +12,46 @@
 * Organization URL: https://www.miraclefactory.co/
 **/
 
-// head files
-// ======================================================================
+/**
+* This file contains all the utility functions used in the program
+* All the according function prototypes are defined in util.h
+**/
+
+/** Head files **/
 #include "game.h"
 #include "util.h"
-// ======================================================================
+
+
+int read_file( char *filename, unsigned int *buffer, int rows, int cols )
+{
+    // Open binary file
+    FILE *fp = fopen( filename, "rb" );
+    if ( fp == NULL )
+    {
+        fprintf( stderr, File_IO_Err );
+        return EXIT_FAILURE;
+    }
+    buffer = malloc( rows * cols * sizeof( unsigned char ) );
+    fread( buffer, sizeof( buffer ), 1, fp );
+    for ( int i = 0; i < 10; i++ )
+    {
+        printf( "%d ", buffer[i] );
+    }
+    fclose( fp );
+    return EXIT_SUCCESS;
+}
+
+int write_file( char *filename, int rows, int cols )
+{
+    // Open binary file
+    FILE *fp = fopen( filename, "wb" );
+    if ( fp == NULL )
+    {
+        fprintf( stderr, File_IO_Err );
+        return EXIT_FAILURE;
+    }
+    unsigned int buffer[10] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 0};
+    fwrite( buffer, sizeof( buffer ), 1, fp );
+    fclose( fp );
+    return EXIT_SUCCESS;
+}

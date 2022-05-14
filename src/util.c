@@ -1,4 +1,6 @@
 /**
+* @file: util.c
+* 
 * This program is the implementation of Conway's Game of Life in C
 * This program uses the SDL2 library to display all the content and views
 *

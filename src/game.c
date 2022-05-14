@@ -65,3 +65,32 @@ int init_board_from_file( char *config_file, char *data_file, Board *board )
     fclose( data );
     return EXIT_SUCCESS;
 }
+
+void draw_board( Board* b, Window *player_view, SDL_Renderer* renderer )
+{
+    Uint8 red, green, blue, current_cell_alive;
+    SDL_Rect rectangle;
+    rectangle.w = rectangle.h = player_view->cell_size;
+
+    // Iterate over all cells in the view and draw them to the renderer
+    int screenHeight, screenWidth;
+    SDL_GetRendererOutputSize( renderer, &screenWidth, &screenHeight );
+    for ( int i = 0; i < b->rows; i++ )
+    {
+        for ( int j = 0; j < b->columns; j++ )
+        {
+            current_cell_alive = b->grid[i][j];
+
+            red = current_cell_alive ? LIVING_CELL_R : DEAD_CELL_R;
+            green = current_cell_alive ? LIVING_CELL_G : DEAD_CELL_G;
+            blue = current_cell_alive ? LIVING_CELL_B : DEAD_CELL_B;
+
+            SDL_SetRenderDrawColor( renderer, red, green, blue, 255 );
+            rectangle.x = j*player_view->cell_size;
+            rectangle.y = i*player_view->cell_size;
+            SDL_RenderDrawRect( renderer, &rectangle );
+        }
+    }
+    // Draw the renderer to the screen
+    SDL_RenderPresent( renderer );
+}

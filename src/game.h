@@ -79,5 +79,8 @@ typedef struct
 */
 int init_board_from_file( char *config_file, char *data_file, Board *board );
 
+void draw_board( Board* b, Window *player_view, SDL_Renderer* renderer );
+
+
 
 #endif

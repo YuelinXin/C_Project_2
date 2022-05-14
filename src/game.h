@@ -51,7 +51,7 @@ typedef struct
 {
     int rows;
     int columns;
-    Uint8 grid[ 0 ];
+    int **grid;
 } Board;
 
 typedef struct
@@ -69,8 +69,15 @@ typedef struct
 
 
 /** Define all the function prototypes **/
-Board* init_board( int rows, int columns, int living_cell_count );
-
+/* Initialize the board with the given configuration file and data file 
+    *
+    * @param config_file: the name of the configuration file
+    * @param data_file: the name of the data file
+    * @param board: the board to be initialized
+    *
+    * @return: EXIT_SUCCESS if the board is initialized successfully, EXIT_FAILURE otherwise
+*/
+int init_board_from_file( char *config_file, char *data_file, Board *board );
 
 
 #endif

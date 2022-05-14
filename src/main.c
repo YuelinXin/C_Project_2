@@ -90,8 +90,9 @@ int main( void )
         SDL_RenderCopy( rend, texture, NULL, NULL );
         SDL_RenderPresent( rend );
 
-        write_file( "resources/data/data.bin", 5, 5 );
-        read_file( "resources/data/data.bin", 5, 5 );
+        Board *board;
+        board = malloc( sizeof( Board ) );
+        init_board_from_file( "resources/data/.config", "resources/data/data.txt", board );
 
         // Create event loop
         SDL_Event eve;

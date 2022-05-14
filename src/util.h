@@ -40,7 +40,7 @@
     *
     * @return: EXIT_SUCCESS if the file is read successfully, EXIT_FAILURE otherwise
 */
-int read_file( char *filename, unsigned int *buffer, int rows, int cols );
+int read_bin( char *filename, unsigned int *buffer, int rows, int cols );
 
 /* Write binary files from the int buffer 
     *
@@ -51,7 +51,7 @@ int read_file( char *filename, unsigned int *buffer, int rows, int cols );
     *
     * @return: EXIT_SUCCESS if the file is written successfully, EXIT_FAILURE otherwise
 */
-int write_file( char *filename, unsigned int *buffer, int rows, int cols );
+int write_bin( char *filename, unsigned int *buffer, int rows, int cols );
 
 
 #endif

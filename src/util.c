@@ -22,7 +22,7 @@
 #include "util.h"
 
 
-int read_file( char *filename, unsigned int *buffer, int rows, int cols )
+int read_bin( char *filename, unsigned int *buffer, int rows, int cols )
 {
     // Open binary file
     FILE *fp = fopen( filename, "rb" );
@@ -41,7 +41,7 @@ int read_file( char *filename, unsigned int *buffer, int rows, int cols )
     return EXIT_SUCCESS;
 }
 
-int write_file( char *filename, int rows, int cols )
+int write_bin( char *filename, unsigned int *buffer, int rows, int cols )
 {
     // Open binary file
     FILE *fp = fopen( filename, "wb" );
@@ -50,7 +50,6 @@ int write_file( char *filename, int rows, int cols )
         fprintf( stderr, File_IO_Err );
         return EXIT_FAILURE;
     }
-    unsigned int buffer[10] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 0};
     fwrite( buffer, sizeof( buffer ), 1, fp );
     fclose( fp );
     return EXIT_SUCCESS;

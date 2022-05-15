@@ -46,7 +46,7 @@
 #define DEAD_CELL_B 20
 #define MAX_ROWS 1000
 #define MAX_COLS 1000
-#define MIN_DELAY 25
+#define MIN_DELAY 20
 #define MAX_DELAY 2000
 
 
@@ -55,6 +55,7 @@ typedef struct
 {
     int rows;
     int columns;
+    int delay;
     int **grid;
 } Board;
 
@@ -83,6 +84,14 @@ typedef struct
 */
 int init_board_from_file( char *config_file, char *data_file, Board *board );
 
+/* Initialize the view according to the SDL_Window 
+    *
+    * @param view: the view to be initialized
+    * @param window: the SDL_Window
+    * @param board: the board that is initialized previously
+    *
+    * @return: EXIT_SUCCESS if the view is initialized successfully
+*/
 int init_view( Window *view, SDL_Window *window, Board *board );
 
 /* Draw the board on the window
@@ -93,11 +102,25 @@ int init_view( Window *view, SDL_Window *window, Board *board );
     *
     * @return: none
 */
-void draw_board( Board* b, Window *player_view, SDL_Renderer* renderer );
+void draw_board( Board* board, Window *player_view, SDL_Renderer* renderer );
 
-int count_neighbors( Board *b, int row, int col );
+/* Count the number of neighbors of a given cell
+    *
+    * @param board: the board used in the game
+    * @param row: the row number of the given cell
+    * @param board: the column number of the given cell
+    *
+    * @return: EXIT_SUCCESS if the count is performed successfully
+*/
+int count_neighbors( Board *board, int row, int col );
 
-int update_next_generation( Board *b );
+/* Update the board according to the rules of the game, this function holds the logic behind Conway's Game of Life
+    *
+    * @param board: the board to be updated
+    *
+    * @return: EXIT_SUCCESS if the board is updated successfully
+*/
+int update_next_generation( Board *board );
 
 
 #endif

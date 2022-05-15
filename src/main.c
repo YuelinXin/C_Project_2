@@ -40,7 +40,7 @@ int main( int argc, char** argv )
         printf( "SDL initialized\n" );
 
         // Create window
-        SDL_Window *window = SDL_CreateWindow( "SDL Test", SDL_WINDOWPOS_CENTERED, 
+        SDL_Window *window = SDL_CreateWindow( "Conway's Game of Life", SDL_WINDOWPOS_CENTERED, 
             SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN );
         if ( window == NULL )
         {
@@ -120,11 +120,13 @@ int main( int argc, char** argv )
             update_next_generation( board );
             SDL_RenderClear( rend );
             draw_board( board, &view, rend );
-            // Change this into a better practice that does not block the main thread
-            SDL_Delay( 100 );
+            SDL_Delay( board->delay ); // Change this into a better practice that does not block the main thread
         }
 
-        // Clean up resources before exiting
+        // Free the allocted memory
+        free( board );
+
+        // Clean SDL resources before exiting
         SDL_DestroyTexture( texture );
         SDL_DestroyRenderer ( rend );
         SDL_DestroyWindow( window );

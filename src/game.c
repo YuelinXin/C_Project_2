@@ -28,7 +28,6 @@
 int init_board_from_file( char *config_file, char *data_file, Board *board )
 {
     // Read rows and cols from config file
-    int delay = 0;
     FILE *config = fopen( config_file, "r" );
     if ( config == NULL )
     {
@@ -37,10 +36,11 @@ int init_board_from_file( char *config_file, char *data_file, Board *board )
     }
     while( !feof( config ) )
     {
-        fscanf( config, "rows,cols: (%d,%d)\ndelay: (%d)", &board->rows, &board->columns, &delay );
+        fscanf( config, "rows,cols: (%d,%d)\ndelay: (%d)", &board->rows, &board->columns, &board->delay );
     }
     fclose( config );
-    printf( "Program parameter:\nrows: %d, cols: %d\ndelay: %dms\n", board->rows, board->columns, delay );
+    printf( "Program parameter:\nrows: %d, cols: %d\ndelay: %dms\n", board->rows, board->columns, board->delay );
+    // Error checking on the configuraiton
     if ( board->rows < 10 || board->columns < 10 )
     {
         fprintf( stderr, "Board size is too small\n" );
@@ -51,7 +51,7 @@ int init_board_from_file( char *config_file, char *data_file, Board *board )
         fprintf( stderr, "Board size is too large\n" );
         return EXIT_FAILURE;
     }
-    if ( delay < MIN_DELAY || delay > MAX_DELAY )
+    if ( board->delay < MIN_DELAY || board->delay > MAX_DELAY )
     {
         fprintf( stderr, "Delay is out of range\n" );
         return EXIT_FAILURE;
@@ -106,7 +106,6 @@ void draw_board( Board* b, Window *view, SDL_Renderer* renderer )
     Uint8 red, green, blue, current_cell_alive;
     SDL_Rect rectangle;
     rectangle.w = rectangle.h = view->cell_size;
-
     // Iterate over all cells in the view and draw them to the renderer
     int screenHeight, screenWidth;
     SDL_GetRendererOutputSize( renderer, &screenWidth, &screenHeight );
@@ -115,11 +114,9 @@ void draw_board( Board* b, Window *view, SDL_Renderer* renderer )
         for ( int j = 0; j < b->columns; j++ )
         {
             current_cell_alive = b->grid[i][j];
-
             red = current_cell_alive ? LIVING_CELL_R : DEAD_CELL_R;
             green = current_cell_alive ? LIVING_CELL_G : DEAD_CELL_G;
             blue = current_cell_alive ? LIVING_CELL_B : DEAD_CELL_B;
-
             SDL_SetRenderDrawColor( renderer, red, green, blue, 255 );
             rectangle.x = j * view->cell_size;
             rectangle.y = i * view->cell_size;
@@ -151,6 +148,7 @@ inline int count_neighbors( Board *b, int row, int col )
 int update_next_generation( Board *b )
 {
     int count;
+    // Create a temp board to store the data for the next generation
     Board *next_gen = ( Board* )malloc( sizeof( Board ) );
     next_gen->rows = b->rows;
     next_gen->columns = b->columns;

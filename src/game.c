@@ -28,6 +28,7 @@
 int init_board_from_file( char *config_file, char *data_file, Board *board )
 {
     // Read rows and cols from config file
+    int delay = 0;
     FILE *config = fopen( config_file, "r" );
     if ( config == NULL )
     {
@@ -36,24 +37,39 @@ int init_board_from_file( char *config_file, char *data_file, Board *board )
     }
     while( !feof( config ) )
     {
-        fscanf( config, "rows,cols: %d,%d", &board->rows, &board->columns );
+        fscanf( config, "rows,cols: (%d,%d)\ndelay: (%d)", &board->rows, &board->columns, &delay );
     }
     fclose( config );
-    printf( "rows: %d, cols: %d\n", board->rows, board->columns );
+    printf( "Program parameter:\nrows: %d, cols: %d\ndelay: %dms\n", board->rows, board->columns, delay );
+    if ( board->rows < 10 || board->columns < 10 )
+    {
+        fprintf( stderr, "Board size is too small\n" );
+        return EXIT_FAILURE;
+    }
+    if ( board->rows > MAX_ROWS || board->columns > MAX_COLS )
+    {
+        fprintf( stderr, "Board size is too large\n" );
+        return EXIT_FAILURE;
+    }
+    if ( delay < MIN_DELAY || delay > MAX_DELAY )
+    {
+        fprintf( stderr, "Delay is out of range\n" );
+        return EXIT_FAILURE;
+    }
 
     // Read data from data file
-    board->grid = (int**)malloc( board->rows * sizeof( int* ) );
     FILE *data = fopen( data_file, "r" );
     if ( data == NULL )
     {
         fprintf( stderr, File_IO_Err );
         return EXIT_FAILURE;
     }
+    board->grid = ( int** )malloc( board->rows * sizeof( int* ) );
     while( !feof( data ) )
     {
         for ( int i = 0; i < board->rows; i++ )
         {
-            board->grid[i] = (int*)malloc( board->columns * sizeof( int ) );
+            board->grid[i] = ( int* )malloc( board->columns * sizeof( int ) );
             for( int j = 0; j < board->columns; j++ )
             {
                 fscanf( data, "%d ", &board->grid[i][j] );
@@ -66,11 +82,30 @@ int init_board_from_file( char *config_file, char *data_file, Board *board )
     return EXIT_SUCCESS;
 }
 
-void draw_board( Board* b, Window *player_view, SDL_Renderer* renderer )
+int init_view( Window *view, SDL_Window *window, Board *board )
+{
+    int window_height, window_width;
+    SDL_GL_GetDrawableSize( window, &window_width, &window_height );
+    view->cell_size = ( window_width > window_height ) ? window_height / board->rows : window_width / board->columns;
+    view->height_in_cells = window_height / view->cell_size;
+    view->width_in_cells = window_width / view->cell_size;
+    view->window_height = window_height;
+    view->window_width = window_width;
+    view->movement_speed_in_cells = 3;
+    view->min_movement_speed_in_pixels = view->movement_speed_in_cells * view->cell_size;
+    const int BOARD_HEIGHT = view->window_height / 4;
+    const int BOARD_WIDTH = view->window_width / 4;
+    // The starting position of the camera
+    view->camera_x = ( BOARD_WIDTH - view->width_in_cells ) / 2;
+    view->camera_y = ( BOARD_HEIGHT - view->height_in_cells ) / 2;
+    return EXIT_SUCCESS;
+}
+
+void draw_board( Board* b, Window *view, SDL_Renderer* renderer )
 {
     Uint8 red, green, blue, current_cell_alive;
     SDL_Rect rectangle;
-    rectangle.w = rectangle.h = player_view->cell_size;
+    rectangle.w = rectangle.h = view->cell_size;
 
     // Iterate over all cells in the view and draw them to the renderer
     int screenHeight, screenWidth;
@@ -86,11 +121,71 @@ void draw_board( Board* b, Window *player_view, SDL_Renderer* renderer )
             blue = current_cell_alive ? LIVING_CELL_B : DEAD_CELL_B;
 
             SDL_SetRenderDrawColor( renderer, red, green, blue, 255 );
-            rectangle.x = j*player_view->cell_size;
-            rectangle.y = i*player_view->cell_size;
+            rectangle.x = j * view->cell_size;
+            rectangle.y = i * view->cell_size;
             SDL_RenderDrawRect( renderer, &rectangle );
         }
     }
     // Draw the renderer to the screen
     SDL_RenderPresent( renderer );
+}
+
+inline int count_neighbors( Board *b, int row, int col )
+{
+    int count = 0;
+    for ( int i = row -1 ; i <= row + 1; i++ )
+    {
+        for ( int j = col - 1; j <= col + 1; j++ )
+        {
+            if ( i == row && j == col )
+                continue;
+            if ( i < 0 || i >= b->rows || j < 0 || j >= b->columns )
+                continue;
+            if ( b->grid[i][j] )
+                count++;
+        }
+    }
+    return count;
+}
+
+int update_next_generation( Board *b )
+{
+    int count;
+    Board *next_gen = ( Board* )malloc( sizeof( Board ) );
+    next_gen->rows = b->rows;
+    next_gen->columns = b->columns;
+    next_gen->grid = ( int** )malloc( b->rows * sizeof( int* ) );
+    for ( int i = 0; i < b->rows; i++ )
+    {
+        next_gen->grid[i] = ( int* )malloc( b->columns * sizeof( int ) );
+        for ( int j = 0; j < b->columns; j++ )
+        {
+            count = count_neighbors( b, i, j );
+            if ( b->grid[i][j] )
+            {
+                if ( count < 2 || count > 3 )
+                    next_gen->grid[i][j] = 0;
+                else
+                    next_gen->grid[i][j] = 1;
+            }
+            else
+            {
+                if ( count == 3 )
+                    next_gen->grid[i][j] = 1;
+                else
+                    next_gen->grid[i][j] = 0;
+            }
+        }
+    }
+    // Copy the next generation grid to the current grid
+    // Do not use memcpy!
+    for ( int i = 0; i < b->rows; i++ )
+    {
+        for ( int j = 0; j < b->columns; j++ )
+        {
+            b->grid[i][j] = next_gen->grid[i][j];
+        }
+    }
+    free( next_gen );
+    return EXIT_SUCCESS;
 }

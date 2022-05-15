@@ -28,7 +28,7 @@ const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 640;
 
 
-int main( void )
+int main( int argc, char** argv )
 {
     if ( SDL_Init( SDL_INIT_VIDEO ) < 0 )
     {
@@ -96,23 +96,10 @@ int main( void )
         init_board_from_file( "resources/data/.config", "resources/data/data.txt", board );
 
         // Initialize the view window
-        Window player_view;
-        int window_height, window_width;
-        SDL_GL_GetDrawableSize( window, &window_width, &window_height );
-        player_view.cell_size = ( window_width > window_height ) ? window_height / board->rows : window_width / board->columns;
-        player_view.height_in_cells = window_height / player_view.cell_size;
-        player_view.width_in_cells = window_width / player_view.cell_size;
-        player_view.window_height = window_height;
-        player_view.window_width = window_width;
-        player_view.movement_speed_in_cells = 3;
-        player_view.min_movement_speed_in_pixels = player_view.movement_speed_in_cells * player_view.cell_size;
-        const int BOARD_HEIGHT = player_view.window_height / 4;
-        const int BOARD_WIDTH = player_view.window_width / 4;
-        // The starting position of the camera
-        player_view.camera_x = ( BOARD_WIDTH - player_view.width_in_cells ) / 2;
-        player_view.camera_y = ( BOARD_HEIGHT - player_view.height_in_cells ) / 2;
+        Window view;
+        init_view( &view, window, board );
         SDL_RenderClear( rend );
-        draw_board( board, &player_view, rend );
+        draw_board( board, &view, rend );
 
         // Create event loop
         SDL_Event eve;
@@ -130,6 +117,11 @@ int main( void )
                     printf( "left\n" );
                 }
             }
+            update_next_generation( board );
+            SDL_RenderClear( rend );
+            draw_board( board, &view, rend );
+            // Change this into a better practice that does not block the main thread
+            SDL_Delay( 100 );
         }
 
         // Clean up resources before exiting

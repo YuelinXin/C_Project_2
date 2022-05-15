@@ -44,6 +44,10 @@
 #define DEAD_CELL_R 20
 #define DEAD_CELL_G 20
 #define DEAD_CELL_B 20
+#define MAX_ROWS 1000
+#define MAX_COLS 1000
+#define MIN_DELAY 25
+#define MAX_DELAY 2000
 
 
 /** define all the structs used in the board **/
@@ -79,8 +83,21 @@ typedef struct
 */
 int init_board_from_file( char *config_file, char *data_file, Board *board );
 
+int init_view( Window *view, SDL_Window *window, Board *board );
+
+/* Draw the board on the window
+    *
+    * @param board: the board to be drawn
+    * @param window: the window configuration
+    * @param renderer: the renderer to draw the board
+    *
+    * @return: none
+*/
 void draw_board( Board* b, Window *player_view, SDL_Renderer* renderer );
 
+int count_neighbors( Board *b, int row, int col );
+
+int update_next_generation( Board *b );
 
 
 #endif

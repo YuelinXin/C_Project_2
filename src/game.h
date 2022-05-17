@@ -122,5 +122,7 @@ int count_neighbors( Board *board, int row, int col );
 */
 int update_next_generation( Board *board );
 
+int write_back_to_file( char *config_file, char *data_file, Board *board );
+
 
 #endif

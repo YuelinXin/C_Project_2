@@ -24,8 +24,8 @@
 #include "util.h"
 
 /** Program parameters **/
-const int WINDOW_WIDTH = 640;
-const int WINDOW_HEIGHT = 640;
+const int WINDOW_WIDTH = 400;
+const int WINDOW_HEIGHT = 400;
 
 
 int main( int argc, char** argv )
@@ -104,23 +104,43 @@ int main( int argc, char** argv )
         // Create event loop
         SDL_Event eve;
         int quit = FALSE;
+        int pause = FALSE;
         while( !quit )
         {
             while ( SDL_PollEvent( &eve ) )
             {
                 if ( eve.type == SDL_QUIT )
                 {
+                    write_back_to_file( "resources/data/.config", "resources/data/data.txt", board );
                     quit = TRUE;
                 }
-                if ( eve.button.button == SDL_BUTTON_LEFT )
+                else if ( eve.button.button == SDL_BUTTON_LEFT )
                 {
                     printf( "left\n" );
                 }
+                else if ( eve.type == SDL_KEYDOWN )
+                {
+                    switch ( eve.key.keysym.scancode )
+                    {
+                        case SDL_SCANCODE_SPACE:
+                            pause = !pause;
+                            break;
+                        case SDL_SCANCODE_Q:
+                            write_back_to_file( "resources/data/.config", "resources/data/data.txt", board );
+                            quit = TRUE;
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
-            update_next_generation( board );
-            SDL_RenderClear( rend );
-            draw_board( board, &view, rend );
-            SDL_Delay( board->delay ); // Change this into a better practice that does not block the main thread
+            if ( !pause )
+            {
+                update_next_generation( board );
+                SDL_RenderClear( rend );
+                draw_board( board, &view, rend );
+                SDL_Delay( board->delay ); // Change this into a better practice that does not block the main thread
+            }
         }
 
         // Free the allocted memory

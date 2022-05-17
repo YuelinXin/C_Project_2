@@ -103,7 +103,7 @@ int init_view( Window *view, SDL_Window *window, Board *board )
 
 void draw_board( Board* b, Window *view, SDL_Renderer* renderer )
 {
-    Uint8 red, green, blue, current_cell_alive;
+    Uint8 red, green, blue;
     SDL_Rect rectangle;
     rectangle.w = rectangle.h = view->cell_size;
     // Iterate over all cells in the view and draw them to the renderer
@@ -113,10 +113,9 @@ void draw_board( Board* b, Window *view, SDL_Renderer* renderer )
     {
         for ( int j = 0; j < b->columns; j++ )
         {
-            current_cell_alive = b->grid[i][j];
-            red = current_cell_alive ? LIVING_CELL_R : DEAD_CELL_R;
-            green = current_cell_alive ? LIVING_CELL_G : DEAD_CELL_G;
-            blue = current_cell_alive ? LIVING_CELL_B : DEAD_CELL_B;
+            red = b->grid[i][j] ? LIVING_CELL_R : DEAD_CELL_R;
+            green = b->grid[i][j] ? LIVING_CELL_G : DEAD_CELL_G;
+            blue = b->grid[i][j] ? LIVING_CELL_B : DEAD_CELL_B;
             SDL_SetRenderDrawColor( renderer, red, green, blue, 255 );
             rectangle.x = j * view->cell_size;
             rectangle.y = i * view->cell_size;
@@ -185,5 +184,36 @@ int update_next_generation( Board *b )
         }
     }
     free( next_gen );
+    return EXIT_SUCCESS;
+}
+
+int write_back_to_file( char *config_file, char *data_file, Board *board )
+{
+    // Write config file
+    FILE *config = fopen( config_file, "w" );
+    if ( config == NULL )
+    {
+        fprintf( stderr, File_IO_Err );
+        return EXIT_FAILURE;
+    }
+    fprintf( config, "rows,cols: (%d,%d)\ndelay: (%d)", board->rows, board->columns, board->delay );
+    fclose( config );
+
+    // Write data file
+    FILE *data = fopen( data_file, "w" );
+    if ( data == NULL )
+    {
+        fprintf( stderr, File_IO_Err );
+        return EXIT_FAILURE;
+    }
+    for ( int i = 0; i < board->rows; i++ )
+    {
+        for ( int j = 0; j < board->columns; j++ )
+        {
+            fprintf( data, "%d ", board->grid[i][j] );
+        }
+        fprintf( data, "\n" );
+    }
+    fclose( data );
     return EXIT_SUCCESS;
 }

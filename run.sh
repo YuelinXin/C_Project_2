@@ -19,4 +19,4 @@
 
 clear
 make
-./build/debug/exe
+./build/debug/exe resources/data/.config resources/data/data.txt

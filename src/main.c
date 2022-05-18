@@ -30,6 +30,18 @@ const int WINDOW_HEIGHT = 400;
 
 int main( int argc, char** argv )
 {
+    // Read command line arguments
+    if ( argc != 3 )
+    {
+        printf( "Usage: ./build/debug/exe <config_file> <data_file>\n" );
+        return EXIT_FAILURE;
+    }
+    char *config_file = malloc( strlen( argv[1] ) + 1 );
+    char *data_file = malloc( strlen( argv[2] ) + 1 );
+    strcpy( config_file, argv[1] );
+    strcpy( data_file, argv[2] );
+
+    // Initialize SDL
     if ( SDL_Init( SDL_INIT_VIDEO ) < 0 )
     {
         fprintf( stderr, "SDL could not be initialized, SDL_Error: %s\n", SDL_GetError() );
@@ -93,7 +105,7 @@ int main( int argc, char** argv )
         // Initialize the board
         Board *board;
         board = malloc( sizeof( Board ) );
-        init_board_from_file( "resources/data/.config", "resources/data/data.txt", board );
+        init_board_from_file( config_file, data_file, board );
 
         // Initialize the view window
         Window view;
@@ -111,7 +123,7 @@ int main( int argc, char** argv )
             {
                 if ( eve.type == SDL_QUIT )
                 {
-                    write_back_to_file( "resources/data/.config", "resources/data/data.txt", board );
+                    write_back_to_file( config_file, data_file, board );
                     quit = TRUE;
                 }
                 else if ( eve.button.button == SDL_BUTTON_LEFT )
@@ -126,7 +138,7 @@ int main( int argc, char** argv )
                             pause = !pause;
                             break;
                         case SDL_SCANCODE_Q:
-                            write_back_to_file( "resources/data/.config", "resources/data/data.txt", board );
+                            write_back_to_file( config_file, data_file, board );
                             quit = TRUE;
                             break;
                         case SDL_SCANCODE_UP:

@@ -28,48 +28,43 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-// #include <stdint.h>
-// #include <ctype.h>
-// #include <time.h>
-// #include <math.h>
-// #include <assert.h>
-#include "../include/SDL2/SDL.h"
-#include "../include/SDL2/SDL_image.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 
 /** Define all the marcos in the game **/
-#define LIVING_CELL_R 255
-#define LIVING_CELL_G 255
-#define LIVING_CELL_B 255
-#define DEAD_CELL_R 20
-#define DEAD_CELL_G 20
-#define DEAD_CELL_B 20
-#define MAX_ROWS 1000
-#define MAX_COLS 1000
-#define MIN_DELAY 20
-#define MAX_DELAY 2000
+#define LIVING_CELL_R 255   // The red channel of the living cell
+#define LIVING_CELL_G 255   // The green channel of the living cell
+#define LIVING_CELL_B 255   // The blue channel of the living cell
+#define DEAD_CELL_R 20      // The red channel of the dead cell
+#define DEAD_CELL_G 20      // The green channel of the dead cell
+#define DEAD_CELL_B 20      // The blue channel of the dead cell
+#define MAX_ROWS 1000       // The maximum number of rows in the board
+#define MAX_COLS 1000       // The maximum number of columns in the board
+#define MIN_DELAY 20        // The minimum delay between two frames
+#define MAX_DELAY 2000      // The maximum delay between two frames
 
 
 /** define all the structs used in the board **/
 typedef struct
 {
-    int rows;
-    int columns;
-    int delay;
-    int **grid;
+    int rows;        // The number of rows in the board
+    int columns;     // The number of columns in the board
+    int delay;       // The delay between two frames
+    int **grid;      // The grid of the board
 } Board;
 
 typedef struct
 {
-    int camera_x;
-    int camera_y;
-    int cell_size;
-    int height_in_cells;
-    int width_in_cells;
-    int window_height;
-    int window_width;
-    int movement_speed_in_cells;
-    int min_movement_speed_in_pixels;
+    int camera_x;                       // The x coordinate of the camera
+    int camera_y;                       // The y coordinate of the camera
+    int cell_size;                      // The size of each cell
+    int height_in_cells;                // The height of the board in cells
+    int width_in_cells;                 // The width of the board in cells
+    int window_height;                  // The height of the SDL_Window
+    int window_width;                   // The width of the SDL_Window
+    int movement_speed_in_cells;        // The speed of the camera movement
+    int min_movement_speed_in_pixels;   // The minimum speed of the camera movement
 } Window;
 
 

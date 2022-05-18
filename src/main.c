@@ -60,35 +60,35 @@ int main( int argc, char** argv )
             return EXIT_FAILURE;
         }
 
-        // Create surface
-        SDL_Surface *surface = IMG_Load( "resources/images/mf.png" );
-        if ( !surface )
-        {
-            fprintf( stderr, "Error creating a surface: %s\n", SDL_GetError() );
-            SDL_DestroyRenderer( rend );
-            SDL_DestroyWindow( window );
-            SDL_Quit();
-            return EXIT_FAILURE;
-        }
+        // // Create surface
+        // SDL_Surface *surface = IMG_Load( "resources/images/mf.png" );
+        // if ( !surface )
+        // {
+        //     fprintf( stderr, "Error creating a surface: %s\n", SDL_GetError() );
+        //     SDL_DestroyRenderer( rend );
+        //     SDL_DestroyWindow( window );
+        //     SDL_Quit();
+        //     return EXIT_FAILURE;
+        // }
 
-        // Create texture
-        SDL_Texture *texture = SDL_CreateTextureFromSurface( rend, surface );
-        SDL_FreeSurface( surface );
-        if ( !texture )
-        {
-            fprintf( stderr, "Error creating a texture: %s\n", SDL_GetError() );
-            SDL_DestroyRenderer( rend );
-            SDL_DestroyWindow( window );
-            SDL_Quit();
-            return EXIT_FAILURE;
-        }
+        // // Create texture
+        // SDL_Texture *texture = SDL_CreateTextureFromSurface( rend, surface );
+        // SDL_FreeSurface( surface );
+        // if ( !texture )
+        // {
+        //     fprintf( stderr, "Error creating a texture: %s\n", SDL_GetError() );
+        //     SDL_DestroyRenderer( rend );
+        //     SDL_DestroyWindow( window );
+        //     SDL_Quit();
+        //     return EXIT_FAILURE;
+        // }
 
-        // Clear the window
-        SDL_RenderClear( rend );
+        // // Clear the window
+        // SDL_RenderClear( rend );
 
-        // Draw the image to the window
-        SDL_RenderCopy( rend, texture, NULL, NULL );
-        SDL_RenderPresent( rend );
+        // // Draw the image to the window
+        // SDL_RenderCopy( rend, texture, NULL, NULL );
+        // SDL_RenderPresent( rend );
 
         // Initialize the board
         Board *board;
@@ -129,6 +129,12 @@ int main( int argc, char** argv )
                             write_back_to_file( "resources/data/.config", "resources/data/data.txt", board );
                             quit = TRUE;
                             break;
+                        case SDL_SCANCODE_UP:
+                            board->delay -= 20;
+                            break;
+                        case SDL_SCANCODE_DOWN:
+                            board->delay += 20;
+                            break;
                         default:
                             break;
                     }
@@ -147,7 +153,7 @@ int main( int argc, char** argv )
         free( board );
 
         // Clean SDL resources before exiting
-        SDL_DestroyTexture( texture );
+        // SDL_DestroyTexture( texture );
         SDL_DestroyRenderer ( rend );
         SDL_DestroyWindow( window );
         SDL_Quit();

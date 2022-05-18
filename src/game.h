@@ -122,6 +122,14 @@ int count_neighbors( Board *board, int row, int col );
 */
 int update_next_generation( Board *board );
 
+/* Initialize the board with the given configuration file and data file 
+    *
+    * @param config_file: the name of the configuration file
+    * @param data_file: the name of the data file
+    * @param board: the board to be initialized
+    *
+    * @return: EXIT_SUCCESS if the file is saved successfully, EXIT_FAILURE otherwise
+*/
 int write_back_to_file( char *config_file, char *data_file, Board *board );
 
 

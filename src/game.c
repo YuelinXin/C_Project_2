@@ -151,6 +151,7 @@ int update_next_generation( Board *b )
     Board *next_gen = ( Board* )malloc( sizeof( Board ) );
     next_gen->rows = b->rows;
     next_gen->columns = b->columns;
+    // Allocate temporary memory for the temp grid
     next_gen->grid = ( int** )malloc( b->rows * sizeof( int* ) );
     for ( int i = 0; i < b->rows; i++ )
     {
@@ -183,6 +184,7 @@ int update_next_generation( Board *b )
             b->grid[i][j] = next_gen->grid[i][j];
         }
     }
+    // Clear the temporary memory
     free( next_gen );
     return EXIT_SUCCESS;
 }

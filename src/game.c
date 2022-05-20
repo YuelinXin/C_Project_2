@@ -39,21 +39,21 @@ int init_board_from_file( char *config_file, char *data_file, Board *board )
         fscanf( config, "rows,cols: (%d,%d)\ndelay: (%d)", &board->rows, &board->columns, &board->delay );
     }
     fclose( config );
-    printf( "Program parameter:\nrows: %d, cols: %d\ndelay: %dms\n", board->rows, board->columns, board->delay );
+    printf( "[!] Program parameter: rows: %d, cols: %d, delay: %d\n", board->rows, board->columns, board->delay );
     // Error checking on the configuraiton
     if ( board->rows < MIN_ROWS || board->columns < MIN_COLS )
     {
-        fprintf( stderr, "Board size is too small\n" );
+        fprintf( stderr, "[Err] Board size is too small\n" );
         return EXIT_FAILURE;
     }
     if ( board->rows > MAX_ROWS || board->columns > MAX_COLS )
     {
-        fprintf( stderr, "Board size is too large\n" );
+        fprintf( stderr, "[Err] Board size is too large\n" );
         return EXIT_FAILURE;
     }
     if ( board->delay < MIN_DELAY || board->delay > MAX_DELAY )
     {
-        fprintf( stderr, "Delay is out of range\n" );
+        fprintf( stderr, "[Err] Delay is out of range\n" );
         return EXIT_FAILURE;
     }
 
@@ -80,7 +80,7 @@ int init_board_from_file( char *config_file, char *data_file, Board *board )
     }
     if ( count != board->rows * board->columns )
     {
-        fprintf( stderr, "Your configuration has changed\n" );
+        fprintf( stderr, "[!] Your configuration has changed\n" );
         fclose( data );
         free( board->grid );
         return EXIT_FAILURE;

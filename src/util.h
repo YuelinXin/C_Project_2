@@ -27,7 +27,7 @@
 /** Define all the functional marcos **/
 #define FALSE 0
 #define TRUE 1
-#define File_IO_Err "File could not be accessed, check:\n-> Does file exist?\n-> Directory/file name correct?\n-> Is file corrupted?\n"
+#define File_IO_Err "[Err] File could not be accessed, check:\n-> Does file exist?\n-> Directory/file name correct?\n-> Is file corrupted?\n"
 
 
 /** Define all the function prototypes **/

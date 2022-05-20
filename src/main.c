@@ -44,19 +44,19 @@ int main( int argc, char** argv )
     // Initialize SDL
     if ( SDL_Init( SDL_INIT_VIDEO ) < 0 )
     {
-        fprintf( stderr, "SDL could not be initialized, SDL_Error: %s\n", SDL_GetError() );
+        fprintf( stderr, "[Err] SDL could not be initialized, SDL_Error: %s\n", SDL_GetError() );
         return EXIT_FAILURE;
     }
     else
     {
-        printf( "SDL initialized\n" );
+        printf( "[OK] SDL initialized\n" );
 
         // Create window
         SDL_Window *window = SDL_CreateWindow( "Conway's Game of Life", SDL_WINDOWPOS_CENTERED, 
             SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN );
         if ( window == NULL )
         {
-            fprintf( stderr, "Window could not be created, SDL_Error: %s\n", SDL_GetError() );
+            fprintf( stderr, "[Err] Window could not be created, SDL_Error: %s\n", SDL_GetError() );
             SDL_Quit();
             return EXIT_FAILURE;
         }
@@ -66,7 +66,7 @@ int main( int argc, char** argv )
         SDL_Renderer *rend = SDL_CreateRenderer( window, -1, render_flags );
         if ( !rend )
         {
-            fprintf( stderr, "Error trying to create a renderer: %s\n", SDL_GetError() );
+            fprintf( stderr, "[Err] Error trying to create a renderer: %s\n", SDL_GetError() );
             SDL_DestroyWindow( window );
             SDL_Quit();
             return EXIT_FAILURE;
@@ -76,7 +76,7 @@ int main( int argc, char** argv )
         // SDL_Surface *surface = IMG_Load( "resources/images/mf.png" );
         // if ( !surface )
         // {
-        //     fprintf( stderr, "Error creating a surface: %s\n", SDL_GetError() );
+        //     fprintf( stderr, "[Err] Error creating a surface: %s\n", SDL_GetError() );
         //     SDL_DestroyRenderer( rend );
         //     SDL_DestroyWindow( window );
         //     SDL_Quit();
@@ -88,7 +88,7 @@ int main( int argc, char** argv )
         // SDL_FreeSurface( surface );
         // if ( !texture )
         // {
-        //     fprintf( stderr, "Error creating a texture: %s\n", SDL_GetError() );
+        //     fprintf( stderr, "[Err] Error creating a texture: %s\n", SDL_GetError() );
         //     SDL_DestroyRenderer( rend );
         //     SDL_DestroyWindow( window );
         //     SDL_Quit();
@@ -119,6 +119,7 @@ int main( int argc, char** argv )
         SDL_Event eve;
         int quit = FALSE;
         int pause = user_init;  // pause the game at start if user init is required
+        int last_update_tick = 0;
         int x, y;
         while ( !quit )
         {
@@ -130,15 +131,18 @@ int main( int argc, char** argv )
                     write_back_to_file( config_file, data_file, board );
                     quit = TRUE;
                 }
-                // Add new living cells
-                else if ( eve.button.button == SDL_BUTTON_LEFT )
+                // Mouse functionalities
+                else if ( eve.button.button == SDL_BUTTON_LEFT || eve.button.button == SDL_BUTTON_RIGHT )
                 {
                     pause = TRUE;
                     x = eve.button.x / ( view.window_width / board->columns );
                     y = eve.button.y / ( view.window_height / board->rows );
                     if ( x >= 0 && x < board->columns && y >= 0 && y < board->rows )
                     {
-                        board->grid[y][x] = 1;
+                        if ( eve.button.button == SDL_BUTTON_LEFT)  // Add new living cells
+                            board->grid[y][x] = 1;
+                        else if ( eve.button.button == SDL_BUTTON_RIGHT )   // Remove living cells
+                            board->grid[y][x] = 0;
                     }
                     SDL_RenderClear( rend );
                     draw_board( board, &view, rend );
@@ -174,13 +178,13 @@ int main( int argc, char** argv )
                     }
                 }
             }
-            // Update the board if the game is not paused
-            if ( !pause )
+            // Update the board if the game is not paused, control the frequency of updates
+            if ( !pause && !( ( SDL_GetTicks( ) - last_update_tick ) < board->delay ) )
             {
                 update_next_generation( board );
                 SDL_RenderClear( rend );
                 draw_board( board, &view, rend );
-                SDL_Delay( board->delay ); // Change this into a better practice that does not block the main thread
+                last_update_tick = SDL_GetTicks();
             }
         }
 
@@ -194,7 +198,7 @@ int main( int argc, char** argv )
         SDL_DestroyRenderer ( rend );
         SDL_DestroyWindow( window );
         SDL_Quit();
-        printf( "Program terminated\n" );
+        printf( "[!] Program terminated\n" );
     }
     return EXIT_SUCCESS;
 }

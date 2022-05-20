@@ -24,8 +24,8 @@
 #include "util.h"
 
 /** Program parameters **/
-const int WINDOW_WIDTH = 400;
-const int WINDOW_HEIGHT = 400;
+const int WINDOW_WIDTH = 640;
+const int WINDOW_HEIGHT = 640;
 
 
 int main( int argc, char** argv )
@@ -105,19 +105,22 @@ int main( int argc, char** argv )
         // Initialize the board
         Board *board;
         board = malloc( sizeof( Board ) );
-        init_board_from_file( config_file, data_file, board );
+        int user_init = init_board_from_file( config_file, data_file, board );
+        if ( user_init )
+        {
+            init_board_by_user( board, window );
+        }
 
         // Initialize the view window
         Window view;
         init_view( &view, window, board );
-        SDL_RenderClear( rend );
-        draw_board( board, &view, rend );
 
         // Create event loop
         SDL_Event eve;
         int quit = FALSE;
-        int pause = FALSE;
-        while( !quit )
+        int pause = user_init;
+        int x, y;
+        while ( !quit )
         {
             while ( SDL_PollEvent( &eve ) )
             {
@@ -128,7 +131,15 @@ int main( int argc, char** argv )
                 }
                 else if ( eve.button.button == SDL_BUTTON_LEFT )
                 {
-                    printf( "left\n" );
+                    pause = TRUE;
+                    x = eve.button.x / ( view.window_width / board->columns );
+                    y = eve.button.y / ( view.window_height / board->rows );
+                    if ( x >= 0 && x < board->columns && y >= 0 && y < board->rows )
+                    {
+                        board->grid[y][x] = 1;
+                    }
+                    SDL_RenderClear( rend );
+                    draw_board( board, &view, rend );
                 }
                 else if ( eve.type == SDL_KEYDOWN )
                 {
@@ -137,15 +148,17 @@ int main( int argc, char** argv )
                         case SDL_SCANCODE_SPACE:
                             pause = !pause;
                             break;
-                        case SDL_SCANCODE_Q:
+                        case SDL_SCANCODE_ESCAPE:
                             write_back_to_file( config_file, data_file, board );
                             quit = TRUE;
                             break;
                         case SDL_SCANCODE_UP:
-                            board->delay -= 20;
+                            if ( board->delay - 20 >= MIN_DELAY )
+                                board->delay -= 20;
                             break;
                         case SDL_SCANCODE_DOWN:
-                            board->delay += 20;
+                            if ( board->delay + 20 <= MAX_DELAY )
+                                board->delay += 20;
                             break;
                         default:
                             break;
@@ -161,7 +174,7 @@ int main( int argc, char** argv )
             }
         }
 
-        // Free the allocted memory
+        // Free the allocated memory
         free( board );
 
         // Clean SDL resources before exiting

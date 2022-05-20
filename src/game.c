@@ -41,7 +41,7 @@ int init_board_from_file( char *config_file, char *data_file, Board *board )
     fclose( config );
     printf( "Program parameter:\nrows: %d, cols: %d\ndelay: %dms\n", board->rows, board->columns, board->delay );
     // Error checking on the configuraiton
-    if ( board->rows < 10 || board->columns < 10 )
+    if ( board->rows < MIN_ROWS || board->columns < MIN_COLS )
     {
         fprintf( stderr, "Board size is too small\n" );
         return EXIT_FAILURE;
@@ -58,6 +58,7 @@ int init_board_from_file( char *config_file, char *data_file, Board *board )
     }
 
     // Read data from data file
+    int count = 0;
     FILE *data = fopen( data_file, "r" );
     if ( data == NULL )
     {
@@ -73,12 +74,33 @@ int init_board_from_file( char *config_file, char *data_file, Board *board )
             for( int j = 0; j < board->columns; j++ )
             {
                 fscanf( data, "%d ", &board->grid[i][j] );
-                printf( "%d ", board->grid[i][j] );
+                count++;
             }
-            printf( "\n" );
         }
     }
+    if ( count != board->rows * board->columns )
+    {
+        fprintf( stderr, "Your configuration has changed\n" );
+        fclose( data );
+        free( board->grid );
+        return EXIT_FAILURE;
+    }
     fclose( data );
+    return EXIT_SUCCESS;
+}
+
+int init_board_by_user( Board *board, SDL_Window *window )
+{
+    // Initialize the board
+    board->grid = ( int** )malloc( board->rows * sizeof( int* ) );
+    for ( int i = 0; i < board->rows; i++ )
+    {
+        board->grid[i] = ( int* )malloc( board->columns * sizeof( int ) );
+        for( int j = 0; j < board->columns; j++ )
+        {
+            board->grid[i][j] = 0;
+        }
+    }
     return EXIT_SUCCESS;
 }
 
@@ -186,6 +208,18 @@ int update_next_generation( Board *b )
     }
     // Clear the temporary memory
     free( next_gen );
+    return EXIT_SUCCESS;
+}
+
+int clear_all_cells( Board *b )
+{
+    for ( int i = 0; i < b->rows; i++ )
+    {
+        for ( int j = 0; j < b->columns; j++ )
+        {
+            b->grid[i][j] = 0;
+        }
+    }
     return EXIT_SUCCESS;
 }
 

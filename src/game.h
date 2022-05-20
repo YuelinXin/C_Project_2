@@ -39,6 +39,8 @@
 #define DEAD_CELL_R 20      // The red channel of the dead cell
 #define DEAD_CELL_G 20      // The green channel of the dead cell
 #define DEAD_CELL_B 20      // The blue channel of the dead cell
+#define MIN_ROWS 10         // The minimum rows of the board
+#define MIN_COLS 10         // The minimum columns of the board
 #define MAX_ROWS 1000       // The maximum number of rows in the board
 #define MAX_COLS 1000       // The maximum number of columns in the board
 #define MIN_DELAY 20        // The minimum delay between two frames
@@ -79,6 +81,15 @@ typedef struct
 */
 int init_board_from_file( char *config_file, char *data_file, Board *board );
 
+/* Initialize the baord by user
+    *
+    * @param board: the board to be initialized
+    * @param window: the window to be initialized
+    *
+    * @return: EXIT_SUCCESS if the board is initialized successfully, EXIT_FAILURE otherwise
+*/
+int init_board_by_user( Board *board, SDL_Window *window );
+
 /* Initialize the view according to the SDL_Window 
     *
     * @param view: the view to be initialized
@@ -116,6 +127,14 @@ int count_neighbors( Board *board, int row, int col );
     * @return: EXIT_SUCCESS if the board is updated successfully
 */
 int update_next_generation( Board *board );
+
+/* Clear all the cells in the board
+    *
+    * @param board: the board to be cleared
+    *
+    * @return: EXIT_SUCCESS if the board is cleared successfully
+*/
+int clear_all_cells( Board *board );
 
 /* Initialize the board with the given configuration file and data file 
     *

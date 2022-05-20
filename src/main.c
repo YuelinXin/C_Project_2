@@ -118,17 +118,19 @@ int main( int argc, char** argv )
         // Create event loop
         SDL_Event eve;
         int quit = FALSE;
-        int pause = user_init;
+        int pause = user_init;  // pause the game at start if user init is required
         int x, y;
         while ( !quit )
         {
             while ( SDL_PollEvent( &eve ) )
             {
+                // Kill the main thread if the close button is clicked
                 if ( eve.type == SDL_QUIT )
                 {
                     write_back_to_file( config_file, data_file, board );
                     quit = TRUE;
                 }
+                // Add new living cells
                 else if ( eve.button.button == SDL_BUTTON_LEFT )
                 {
                     pause = TRUE;
@@ -141,12 +143,19 @@ int main( int argc, char** argv )
                     SDL_RenderClear( rend );
                     draw_board( board, &view, rend );
                 }
+                // Keyboard functionalities
                 else if ( eve.type == SDL_KEYDOWN )
                 {
                     switch ( eve.key.keysym.scancode )
                     {
                         case SDL_SCANCODE_SPACE:
                             pause = !pause;
+                            break;
+                        case SDL_SCANCODE_C:
+                            pause = TRUE;
+                            clear_all_cells( board );
+                            SDL_RenderClear( rend );
+                            draw_board( board, &view, rend );
                             break;
                         case SDL_SCANCODE_ESCAPE:
                             write_back_to_file( config_file, data_file, board );
@@ -165,6 +174,7 @@ int main( int argc, char** argv )
                     }
                 }
             }
+            // Update the board if the game is not paused
             if ( !pause )
             {
                 update_next_generation( board );
@@ -176,6 +186,8 @@ int main( int argc, char** argv )
 
         // Free the allocated memory
         free( board );
+        free( config_file );
+        free( data_file );
 
         // Clean SDL resources before exiting
         // SDL_DestroyTexture( texture );

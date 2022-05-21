@@ -25,7 +25,7 @@
 
 /** Program parameters **/
 const int WINDOW_WIDTH = 640;
-const int WINDOW_HEIGHT = 640;
+const int WINDOW_HEIGHT = 700;
 
 
 int main( int argc, char** argv )
@@ -60,6 +60,7 @@ int main( int argc, char** argv )
             SDL_Quit();
             return EXIT_FAILURE;
         }
+        SDL_SetWindowIcon( window, IMG_Load( "resources/images/game_of_life.png" ) );
 
         // Create renderer
         Uint32 render_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
@@ -72,35 +73,17 @@ int main( int argc, char** argv )
             return EXIT_FAILURE;
         }
 
-        // // Create surface
-        // SDL_Surface *surface = IMG_Load( "resources/images/mf.png" );
-        // if ( !surface )
-        // {
-        //     fprintf( stderr, "[Err] Error creating a surface: %s\n", SDL_GetError() );
-        //     SDL_DestroyRenderer( rend );
-        //     SDL_DestroyWindow( window );
-        //     SDL_Quit();
-        //     return EXIT_FAILURE;
-        // }
-
-        // // Create texture
-        // SDL_Texture *texture = SDL_CreateTextureFromSurface( rend, surface );
-        // SDL_FreeSurface( surface );
-        // if ( !texture )
-        // {
-        //     fprintf( stderr, "[Err] Error creating a texture: %s\n", SDL_GetError() );
-        //     SDL_DestroyRenderer( rend );
-        //     SDL_DestroyWindow( window );
-        //     SDL_Quit();
-        //     return EXIT_FAILURE;
-        // }
-
-        // // Clear the window
-        // SDL_RenderClear( rend );
-
-        // // Draw the image to the window
-        // SDL_RenderCopy( rend, texture, NULL, NULL );
-        // SDL_RenderPresent( rend );
+        // Create font rend
+        if ( TTF_Init() == -1 )
+        {
+            fprintf( stderr, "[Err] Error trying to initialize TTF: %s\n", SDL_GetError() );
+            SDL_DestroyRenderer( rend );
+            SDL_DestroyWindow( window );
+            SDL_Quit();
+            return EXIT_FAILURE;
+        }
+        TTF_Font* smooth_operator = TTF_OpenFont( "resources/fonts/Formula1-Regular.ttf", 16 );
+        SDL_Color White = {80, 80, 80, 255};
 
         // Initialize the board
         Board *board;
@@ -121,8 +104,11 @@ int main( int argc, char** argv )
         int pause = user_init;  // pause the game at start if user init is required
         int last_update_tick = 0;
         int x, y;
+        int interation = 0;
+        char *str = malloc( sizeof( char ) * 50 );
         while ( !quit )
         {
+            // Listen to events
             while ( SDL_PollEvent( &eve ) )
             {
                 // Kill the main thread if the close button is clicked
@@ -136,7 +122,7 @@ int main( int argc, char** argv )
                 {
                     pause = TRUE;
                     x = eve.button.x / ( view.window_width / board->columns );
-                    y = eve.button.y / ( view.window_height / board->rows );
+                    y = eve.button.y / ( ( view.window_height - 60 ) / board->rows );
                     if ( x >= 0 && x < board->columns && y >= 0 && y < board->rows )
                     {
                         if ( eve.button.button == SDL_BUTTON_LEFT)  // Add new living cells
@@ -146,6 +132,8 @@ int main( int argc, char** argv )
                     }
                     SDL_RenderClear( rend );
                     draw_board( board, &view, rend );
+                    render_text( rend, smooth_operator, White, "Iteration" );
+                    SDL_RenderPresent( rend );
                 }
                 // Keyboard functionalities
                 else if ( eve.type == SDL_KEYDOWN )
@@ -160,6 +148,8 @@ int main( int argc, char** argv )
                             clear_all_cells( board );
                             SDL_RenderClear( rend );
                             draw_board( board, &view, rend );
+                            render_text( rend, smooth_operator, White, "Iteration" );
+                            SDL_RenderPresent( rend );
                             break;
                         case SDL_SCANCODE_ESCAPE:
                             write_back_to_file( config_file, data_file, board );
@@ -182,16 +172,23 @@ int main( int argc, char** argv )
             if ( !pause && !( ( SDL_GetTicks( ) - last_update_tick ) < board->delay ) )
             {
                 update_next_generation( board );
-                SDL_RenderClear( rend );
-                draw_board( board, &view, rend );
+                // Update the current tick to the last update tick
                 last_update_tick = SDL_GetTicks();
+                interation++;
             }
+            SDL_SetRenderDrawColor( rend, BACKGROUND_R, BACKGROUND_G, BACKGROUND_B, 255 );
+            SDL_RenderClear( rend );
+            draw_board( board, &view, rend );
+            sprintf( str, "Iteration - %d", interation );
+            render_text( rend, smooth_operator, White, str );
+            SDL_RenderPresent( rend );
         }
 
         // Free the allocated memory
         free( board );
         free( config_file );
         free( data_file );
+        free( str );
 
         // Clean SDL resources before exiting
         // SDL_DestroyTexture( texture );

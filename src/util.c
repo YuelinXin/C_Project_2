@@ -56,3 +56,14 @@ int write_bin( char *filename, unsigned int *buffer, int rows, int cols )
     fclose( fp );
     return EXIT_SUCCESS;
 }
+
+int render_text( SDL_Renderer *rend, TTF_Font* smooth_operator, SDL_Color color, char *text )
+{
+    SDL_Surface *surface_smooth_operator = TTF_RenderText_Blended( smooth_operator, text, color );
+    SDL_Texture* Message = SDL_CreateTextureFromSurface( rend, surface_smooth_operator );
+    int w, h;
+    SDL_QueryTexture( Message, NULL, NULL, &w, &h );
+    SDL_Rect Message_rect = {15, 660, w, h};
+    SDL_RenderCopy(rend, Message, NULL, &Message_rect);
+    return EXIT_SUCCESS;
+}

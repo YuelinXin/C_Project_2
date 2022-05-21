@@ -53,5 +53,15 @@ int read_bin( char *filename, unsigned int *buffer, int rows, int cols );
 */
 int write_bin( char *filename, unsigned int *buffer, int rows, int cols );
 
+/* Render text onto the screen
+    *
+    * @param rend: the renderer to render the text
+    * @param smooth_operator: the font of the text
+    * @param color: the SDL color of the text
+    * @param text: the content of the text to be rendered
+    *
+    * @return: EXIT_SUCCESS if the text is rendered successfully
+*/
+int render_text( SDL_Renderer *rend, TTF_Font* smooth_operator, SDL_Color color, char *text );
 
 #endif

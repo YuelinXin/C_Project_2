@@ -145,7 +145,7 @@ void draw_board( Board* b, Window *view, SDL_Renderer* renderer )
         }
     }
     // Draw the renderer to the screen
-    SDL_RenderPresent( renderer );
+    // SDL_RenderPresent( renderer );
 }
 
 inline int count_neighbors( Board *b, int row, int col )

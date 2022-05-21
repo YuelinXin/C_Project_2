@@ -30,15 +30,19 @@
 #include <stdlib.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 
 /** Define all the marcos in the game **/
-#define LIVING_CELL_R 255   // The red channel of the living cell
-#define LIVING_CELL_G 255   // The green channel of the living cell
-#define LIVING_CELL_B 255   // The blue channel of the living cell
-#define DEAD_CELL_R 20      // The red channel of the dead cell
-#define DEAD_CELL_G 20      // The green channel of the dead cell
-#define DEAD_CELL_B 20      // The blue channel of the dead cell
+#define LIVING_CELL_R 108   // The red channel of the living cell
+#define LIVING_CELL_G 83   // The green channel of the living cell
+#define LIVING_CELL_B 145   // The blue channel of the living cell
+#define DEAD_CELL_R 235      // The red channel of the dead cell
+#define DEAD_CELL_G 235      // The green channel of the dead cell
+#define DEAD_CELL_B 235      // The blue channel of the dead cell
+#define BACKGROUND_R 240      // The red channel of the background
+#define BACKGROUND_G 240      // The green channel of the background
+#define BACKGROUND_B 240      // The blue channel of the background
 #define MIN_ROWS 10         // The minimum rows of the board
 #define MIN_COLS 10         // The minimum columns of the board
 #define MAX_ROWS 1000       // The maximum number of rows in the board

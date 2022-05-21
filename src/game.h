@@ -34,9 +34,9 @@
 
 
 /** Define all the marcos in the game **/
-#define LIVING_CELL_R 108   // The red channel of the living cell
-#define LIVING_CELL_G 83   // The green channel of the living cell
-#define LIVING_CELL_B 145   // The blue channel of the living cell
+#define LIVING_CELL_R 125   // The red channel of the living cell
+#define LIVING_CELL_G 81   // The green channel of the living cell
+#define LIVING_CELL_B 227   // The blue channel of the living cell
 #define DEAD_CELL_R 235      // The red channel of the dead cell
 #define DEAD_CELL_G 235      // The green channel of the dead cell
 #define DEAD_CELL_B 235      // The blue channel of the dead cell

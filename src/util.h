@@ -58,10 +58,23 @@ int write_bin( char *filename, unsigned int *buffer, int rows, int cols );
     * @param rend: the renderer to render the text
     * @param smooth_operator: the font of the text
     * @param color: the SDL color of the text
-    * @param text: the content of the text to be rendered
+    * @param text: the pointer to the text to be rendered
+    * @param x: the x coordinate of the text
+    * @param y: the y coordinate of the text
     *
     * @return: EXIT_SUCCESS if the text is rendered successfully
 */
-int render_text( SDL_Renderer *rend, TTF_Font* smooth_operator, SDL_Color color, char *text );
+int render_text( SDL_Renderer *rend, TTF_Font* smooth_operator, SDL_Color color, char *text, int x, int y );
+
+/* Render text onto the screen
+    *
+    * @param rend: the renderer to render the text
+    * @param file: the image file to be rendered
+    * @param x: the x coordinate of the text
+    * @param y: the y coordinate of the text
+    *
+    * @return: EXIT_SUCCESS if the text is rendered successfully
+*/
+int render_button( SDL_Renderer *rend, const char *file, int x, int y );
 
 #endif

@@ -25,7 +25,7 @@
 
 /** Program parameters **/
 const int WINDOW_WIDTH = 640;
-const int WINDOW_HEIGHT = 700;
+const int WINDOW_HEIGHT = 680;
 
 
 int main( int argc, char** argv )
@@ -83,13 +83,12 @@ int main( int argc, char** argv )
             return EXIT_FAILURE;
         }
         TTF_Font* smooth_operator = TTF_OpenFont( "resources/fonts/Formula1-Regular.ttf", 16 );
-        SDL_Color White = {80, 80, 80, 255};
+        SDL_Color Gray = {80, 80, 80, 255};
 
         // Initialize the board
         Board *board;
         board = malloc( sizeof( Board ) );
-        int user_init = init_board_from_file( config_file, data_file, board );
-        if ( user_init )
+        if ( init_board_from_file( config_file, data_file, board ) )
         {
             init_board_by_user( board, window );
         }
@@ -101,13 +100,17 @@ int main( int argc, char** argv )
         // Create event loop
         SDL_Event eve;
         int quit = FALSE;
-        int pause = user_init;  // pause the game at start if user init is required
-        int last_update_tick = 0;
-        int x, y;
-        int interation = 0;
-        char *str = malloc( sizeof( char ) * 50 );
+        int pause = TRUE;           // Always pause the game at the beginning
+        int last_update_tick = 0;   // The tick of the last update, used to control the update frequency
+        int x, y;                   // The position of the mouse
+        int interation = 0;         // The number of iterations
+        char *str = malloc( sizeof( char ) * 50 );      // The iteration string
+        char *str_1 = malloc( sizeof( char ) * 50 );    // The delay string
         while ( !quit )
         {
+            // Do some string works here
+            sprintf( str, "Iteration - %d", interation );
+            sprintf( str_1, "Delay - %d", board->delay );
             // Listen to events
             while ( SDL_PollEvent( &eve ) )
             {
@@ -120,20 +123,30 @@ int main( int argc, char** argv )
                 // Mouse functionalities
                 else if ( eve.button.button == SDL_BUTTON_LEFT || eve.button.button == SDL_BUTTON_RIGHT )
                 {
-                    pause = TRUE;
-                    x = eve.button.x / ( view.window_width / board->columns );
-                    y = eve.button.y / ( ( view.window_height - 60 ) / board->rows );
+                    x = eve.button.x / ( view.cell_size );
+                    y = eve.button.y / ( view.cell_size );
+                    // The mouse clicks on the board
                     if ( x >= 0 && x < board->columns && y >= 0 && y < board->rows )
                     {
+                        pause = TRUE;
                         if ( eve.button.button == SDL_BUTTON_LEFT)  // Add new living cells
                             board->grid[y][x] = 1;
                         else if ( eve.button.button == SDL_BUTTON_RIGHT )   // Remove living cells
                             board->grid[y][x] = 0;
+                        // Remember to rerender everything on the screen if something is changed
+                        SDL_RenderClear( rend );
+                        draw_board( board, &view, rend );
+                        render_text( rend, smooth_operator, Gray, str, 15, 650 );
+                        render_text( rend, smooth_operator, Gray, str_1, 180, 650 );
+                        SDL_RenderPresent( rend );
                     }
-                    SDL_RenderClear( rend );
-                    draw_board( board, &view, rend );
-                    render_text( rend, smooth_operator, White, "Iteration" );
-                    SDL_RenderPresent( rend );
+                    // The mouse clicks on the play button
+                    else if ( eve.type == SDL_MOUSEBUTTONDOWN && eve.button.x >= view.window_width - 40 && 
+                        eve.button.x <= view.window_width - 16 && eve.button.y >= view.window_height - 32 && 
+                        eve.button.y <= view.window_height - 8 )
+                    {
+                        pause = !pause;
+                    }
                 }
                 // Keyboard functionalities
                 else if ( eve.type == SDL_KEYDOWN )
@@ -146,9 +159,11 @@ int main( int argc, char** argv )
                         case SDL_SCANCODE_C:
                             pause = TRUE;
                             clear_all_cells( board );
+                            // Remember to rerender everything on the screen if something is changed
                             SDL_RenderClear( rend );
                             draw_board( board, &view, rend );
-                            render_text( rend, smooth_operator, White, "Iteration" );
+                            render_text( rend, smooth_operator, Gray, str, 15, 650 );
+                            render_text( rend, smooth_operator, Gray, str_1, 180, 650 );
                             SDL_RenderPresent( rend );
                             break;
                         case SDL_SCANCODE_ESCAPE:
@@ -176,11 +191,22 @@ int main( int argc, char** argv )
                 last_update_tick = SDL_GetTicks();
                 interation++;
             }
+            // Do the drawing and rendering
             SDL_SetRenderDrawColor( rend, BACKGROUND_R, BACKGROUND_G, BACKGROUND_B, 255 );
             SDL_RenderClear( rend );
             draw_board( board, &view, rend );
-            sprintf( str, "Iteration - %d", interation );
-            render_text( rend, smooth_operator, White, str );
+            render_text( rend, smooth_operator, Gray, str, 15, 650 );
+            render_text( rend, smooth_operator, Gray, str_1, 180, 650 );
+            if ( pause )
+            {
+                SDL_SetWindowTitle( window, "Conway's Game of Life - Paused" );
+                render_button( rend, "resources/images/play.svg", view.window_width - 40, view.window_height - 32 );
+            }
+            else
+            {
+                SDL_SetWindowTitle( window, "Conway's Game of Life" );
+                render_button( rend, "resources/images/pause.svg", view.window_width - 40, view.window_height - 32 );
+            }
             SDL_RenderPresent( rend );
         }
 
@@ -189,9 +215,9 @@ int main( int argc, char** argv )
         free( config_file );
         free( data_file );
         free( str );
+        free( str_1 );
 
         // Clean SDL resources before exiting
-        // SDL_DestroyTexture( texture );
         SDL_DestroyRenderer ( rend );
         SDL_DestroyWindow( window );
         SDL_Quit();

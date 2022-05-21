@@ -57,13 +57,26 @@ int write_bin( char *filename, unsigned int *buffer, int rows, int cols )
     return EXIT_SUCCESS;
 }
 
-int render_text( SDL_Renderer *rend, TTF_Font* smooth_operator, SDL_Color color, char *text )
+int render_text( SDL_Renderer *rend, TTF_Font* smooth_operator, SDL_Color color, char *text, int x, int y )
 {
     SDL_Surface *surface_smooth_operator = TTF_RenderText_Blended( smooth_operator, text, color );
     SDL_Texture* Message = SDL_CreateTextureFromSurface( rend, surface_smooth_operator );
     int w, h;
     SDL_QueryTexture( Message, NULL, NULL, &w, &h );
-    SDL_Rect Message_rect = {15, 660, w, h};
-    SDL_RenderCopy(rend, Message, NULL, &Message_rect);
+    SDL_Rect rect = {x, y, w, h};
+    SDL_RenderCopy(rend, Message, NULL, &rect);
+    SDL_FreeSurface( surface_smooth_operator );
+    SDL_DestroyTexture( Message );
+    return EXIT_SUCCESS;
+}
+
+int render_button( SDL_Renderer *rend, const char *file, int x, int y )
+{
+    SDL_Surface *surface_button = IMG_Load( file );
+    SDL_Texture* Button = SDL_CreateTextureFromSurface( rend, surface_button );
+    SDL_Rect rect = {x, y, 24, 24};
+    SDL_RenderCopy(rend, Button, NULL, &rect);
+    SDL_FreeSurface( surface_button );
+    SDL_DestroyTexture( Button );
     return EXIT_SUCCESS;
 }

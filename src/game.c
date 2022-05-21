@@ -83,13 +83,13 @@ int init_board_from_file( char *config_file, char *data_file, Board *board )
         fprintf( stderr, "[!] Your configuration has changed\n" );
         fclose( data );
         free( board->grid );
-        return EXIT_FAILURE;
+        return 2;
     }
     fclose( data );
     return EXIT_SUCCESS;
 }
 
-int init_board_by_user( Board *board, SDL_Window *window )
+int init_board_by_user( Board *board )
 {
     // Initialize the board
     board->grid = ( int** )malloc( board->rows * sizeof( int* ) );
@@ -104,15 +104,16 @@ int init_board_by_user( Board *board, SDL_Window *window )
     return EXIT_SUCCESS;
 }
 
-int init_view( Window *view, SDL_Window *window, Board *board )
+int init_view( Window *view, Board *board )
 {
-    int window_height, window_width;
-    SDL_GL_GetDrawableSize( window, &window_width, &window_height );
-    view->cell_size = ( window_width > window_height ) ? window_height / board->rows : window_width / board->columns;
-    view->height_in_cells = window_height / view->cell_size;
-    view->width_in_cells = window_width / view->cell_size;
-    view->window_height = window_height;
-    view->window_width = window_width;
+    // int window_height, window_width;
+    // SDL_GL_GetDrawableSize( window, &window_width, &window_height );
+    // view->cell_size = ( board->columns / board->rows > window_width / window_height ) ? window_width / board->columns : window_height / board->rows;
+    view->cell_size = 17;
+    view->window_height = ( view->cell_size * board->rows ) + 40;
+    view->window_width = view->cell_size * board->columns;
+    view->height_in_cells = view->window_height / view->cell_size;
+    view->width_in_cells = view->window_width / view->cell_size;
     view->movement_speed_in_cells = 3;
     view->min_movement_speed_in_pixels = view->movement_speed_in_cells * view->cell_size;
     const int BOARD_HEIGHT = view->window_height / 4;

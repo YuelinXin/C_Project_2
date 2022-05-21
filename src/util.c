@@ -80,3 +80,19 @@ int render_button( SDL_Renderer *rend, const char *file, int x, int y )
     SDL_DestroyTexture( Button );
     return EXIT_SUCCESS;
 }
+
+int number_input( void )
+{
+    int option = -1;
+    char line[10];
+
+    fflush(stdin);
+    scanf("%4s", line);
+    for(int i = 0; i<strlen(line); i++){
+        if(!isdigit(line[i])){
+            return -1;
+        }
+    }
+    option = (int)atoi(line);
+    return option;
+}

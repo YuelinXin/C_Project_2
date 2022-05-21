@@ -43,12 +43,12 @@
 #define BACKGROUND_R 240      // The red channel of the background
 #define BACKGROUND_G 240      // The green channel of the background
 #define BACKGROUND_B 240      // The blue channel of the background
-#define MIN_ROWS 10         // The minimum rows of the board
-#define MIN_COLS 10         // The minimum columns of the board
-#define MAX_ROWS 1000       // The maximum number of rows in the board
-#define MAX_COLS 1000       // The maximum number of columns in the board
+#define MIN_ROWS 15         // The minimum rows of the board
+#define MIN_COLS 30         // The minimum columns of the board
+#define MAX_ROWS 45       // The maximum number of rows in the board
+#define MAX_COLS 80       // The maximum number of columns in the board
 #define MIN_DELAY 20        // The minimum delay between two frames
-#define MAX_DELAY 2000      // The maximum delay between two frames
+#define MAX_DELAY 1000      // The maximum delay between two frames
 
 
 /** define all the structs used in the board **/
@@ -88,21 +88,19 @@ int init_board_from_file( char *config_file, char *data_file, Board *board );
 /* Initialize the baord by user
     *
     * @param board: the board to be initialized
-    * @param window: the window to be initialized
     *
     * @return: EXIT_SUCCESS if the board is initialized successfully, EXIT_FAILURE otherwise
 */
-int init_board_by_user( Board *board, SDL_Window *window );
+int init_board_by_user( Board *board );
 
 /* Initialize the view according to the SDL_Window 
     *
     * @param view: the view to be initialized
-    * @param window: the SDL_Window
     * @param board: the board that is initialized previously
     *
     * @return: EXIT_SUCCESS if the view is initialized successfully
 */
-int init_view( Window *view, SDL_Window *window, Board *board );
+int init_view( Window *view, Board *board );
 
 /* Draw the board on the window
     *

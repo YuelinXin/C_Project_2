@@ -1,10 +1,32 @@
+/**
+* @file: unit_test.c
+* 
+* This program is the implementation of Conway's Game of Life in C
+* This program uses the SDL2 library to display all the content and views
+*
+* Run the main program with "sh run.sh"
+* This command will auto compile the program using the Makefile, 
+* and run the program "./build/debug/exe"
+* 
+* Authorship:       Yuelin Xin
+* Affiliation:      School of Computing, University of Leeds
+* Organization:     MiracleFactory
+* Organization URL: https://www.miraclefactory.co/
+**/
+
+/**
+* This file contains all the functions that implement the logic behind Conway's Game of Life
+* This file also contains all the rendering functions of the game
+* All the according function prototypes are defined in game.h
+**/
+
+/** Head files **/
 #include <stdio.h>
 #include <string.h>
 #include "include/CUnit/Basic.h"
 
-// gcc -o test unit_test.c -Iinclude -Llib -L/opt/homebrew/lib
 
-
+// Test Suite 1 
 static int sum(int a, int b)
 {
     if (a > 4) {

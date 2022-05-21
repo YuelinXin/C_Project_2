@@ -77,6 +77,10 @@ int render_text( SDL_Renderer *rend, TTF_Font* smooth_operator, SDL_Color color,
 */
 int render_button( SDL_Renderer *rend, const char *file, int x, int y );
 
+/* Get the number input from the user
+    *
+    * @return: The inputed number if the number is read successfully, -1 otherwise
+*/
 int number_input( void );
 
 #endif

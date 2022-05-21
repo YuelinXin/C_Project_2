@@ -43,7 +43,7 @@ int main( int argc, char** argv )
 
     // User input
     int pre = 0;
-    printf( "Please enter the number of generations to run (smaller than 9999): " );
+    printf( "Please enter the number of generations to run (smaller than 9999, put 0 if you do not want to specify a prefix): " );
     pre = number_input();
     if ( pre < 0 || pre > 9999 )
     {

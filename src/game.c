@@ -59,12 +59,34 @@ int init_board_from_file( char *config_file, char *data_file, Board *board )
 
     // Read data from data file
     int count = 0;
+    int row_count = 0;
     FILE *data = fopen( data_file, "r" );
     if ( data == NULL )
     {
         fprintf( stderr, File_IO_Err );
         return EXIT_FAILURE;
     }
+    while( !feof( data ) )
+    {
+        // Count the columns and rows of the data file
+        if ( fgetc( data ) == '\n' )
+        {
+            row_count++;
+        }
+        else
+        {
+            count++;
+        }
+    }
+    printf( "[!] Data file parameter: rows: %d, cols: %d\n", row_count, count / ( 2 * row_count ) );
+    if ( count / ( 2 * row_count ) != board->columns || row_count != board->rows )
+    {
+        fprintf( stderr, "[!] Your configuration has changed\n" );
+        fclose( data );
+        return 2;
+    }
+    // Set the file pointer to the beginning of the file
+    rewind( data );
     board->grid = ( int** )malloc( board->rows * sizeof( int* ) );
     while( !feof( data ) )
     {
@@ -74,16 +96,8 @@ int init_board_from_file( char *config_file, char *data_file, Board *board )
             for( int j = 0; j < board->columns; j++ )
             {
                 fscanf( data, "%d ", &board->grid[i][j] );
-                count++;
             }
         }
-    }
-    if ( count != board->rows * board->columns )
-    {
-        fprintf( stderr, "[!] Your configuration has changed\n" );
-        fclose( data );
-        free( board->grid );
-        return 2;
     }
     fclose( data );
     return EXIT_SUCCESS;

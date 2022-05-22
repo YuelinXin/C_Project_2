@@ -37,12 +37,12 @@
 #define LIVING_CELL_R 125   // The red channel of the living cell
 #define LIVING_CELL_G 81   // The green channel of the living cell
 #define LIVING_CELL_B 227   // The blue channel of the living cell
-#define DEAD_CELL_R 235      // The red channel of the dead cell
-#define DEAD_CELL_G 235      // The green channel of the dead cell
-#define DEAD_CELL_B 235      // The blue channel of the dead cell
-#define BACKGROUND_R 240      // The red channel of the background
-#define BACKGROUND_G 240      // The green channel of the background
-#define BACKGROUND_B 240      // The blue channel of the background
+#define DEAD_CELL_R 240      // The red channel of the dead cell
+#define DEAD_CELL_G 240      // The green channel of the dead cell
+#define DEAD_CELL_B 240      // The blue channel of the dead cell
+#define BACKGROUND_R 245      // The red channel of the background
+#define BACKGROUND_G 245      // The green channel of the background
+#define BACKGROUND_B 245      // The blue channel of the background
 #define MIN_ROWS 15         // The minimum rows of the board
 #define MIN_COLS 30         // The minimum columns of the board
 #define MAX_ROWS 45       // The maximum number of rows in the board

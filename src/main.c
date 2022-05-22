@@ -85,8 +85,13 @@ int main( int argc, char** argv )
     {
         printf( "[OK] SDL initialized\n" );
 
+        char *window_title = malloc( 50 * sizeof( char ) );
+        char *window_title_paused = malloc( 50 * sizeof( char ) );
+        sprintf( window_title, "Conway's Game of Life (%d x %d)", board->rows, board->columns );
+        sprintf( window_title_paused, "Conway's Game of Life (%d x %d) - Paused", board->rows, board->columns );
+
         // Create window
-        SDL_Window *window = SDL_CreateWindow( "Conway's Game of Life", SDL_WINDOWPOS_CENTERED, 
+        SDL_Window *window = SDL_CreateWindow( window_title, SDL_WINDOWPOS_CENTERED, 
             SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN );
         if ( window == NULL )
         {
@@ -184,6 +189,7 @@ int main( int argc, char** argv )
                             break;
                         case SDL_SCANCODE_C:
                             pause = TRUE;
+                            iteration = 0;
                             clear_all_cells( board );
                             // Remember to rerender everything on the screen if something is changed
                             SDL_RenderClear( rend );
@@ -230,12 +236,12 @@ int main( int argc, char** argv )
             render_text( rend, smooth_operator, Gray, str_2, 300, view.window_height - 28 );
             if ( pause )
             {
-                SDL_SetWindowTitle( window, "Conway's Game of Life - Paused" );
+                SDL_SetWindowTitle( window, window_title_paused );
                 render_button( rend, "resources/images/play.svg", view.window_width - 36, view.window_height - 32 );
             }
             else
             {
-                SDL_SetWindowTitle( window, "Conway's Game of Life" );
+                SDL_SetWindowTitle( window, window_title);
                 render_button( rend, "resources/images/pause.svg", view.window_width - 36, view.window_height - 32 );
             }
             SDL_RenderPresent( rend );
@@ -245,8 +251,11 @@ int main( int argc, char** argv )
         free( board );
         free( config_file );
         free( data_file );
+        free( window_title );
+        free( window_title_paused );
         free( str );
         free( str_1 );
+        free( str_2 );
 
         // Clean SDL resources before exiting
         SDL_DestroyRenderer ( rend );

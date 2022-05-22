@@ -22,7 +22,7 @@
 
 SRC_DIR = src
 BUILD_DIR = build/debug
-OBJ_NAME = exe
+OBJ_NAME = GameOfLife
 cc = gcc
 SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
 OBJ_FILES = $(SRC_FILES:.c=.o)

@@ -73,6 +73,11 @@ int render_text( SDL_Renderer *rend, TTF_Font* smooth_operator, SDL_Color color,
 int render_button( SDL_Renderer *rend, const char *file, int x, int y )
 {
     SDL_Surface *surface_button = IMG_Load( file );
+    if ( surface_button == NULL )
+    {
+        fprintf( stderr, "[Err] Unable to load image %s! SDL_image Error: %s\n", file, IMG_GetError() );
+        return EXIT_FAILURE;
+    }
     SDL_Texture* Button = SDL_CreateTextureFromSurface( rend, surface_button );
     SDL_Rect rect = {x, y, 24, 24};
     SDL_RenderCopy(rend, Button, NULL, &rect);

@@ -91,6 +91,8 @@ int init_board_from_file( char *config_file, char *data_file, Board *board )
 
 int init_board_by_user( Board *board )
 {
+    if ( board == NULL )
+        return EXIT_FAILURE;
     // Initialize the board
     board->grid = ( int** )malloc( board->rows * sizeof( int* ) );
     for ( int i = 0; i < board->rows; i++ )
@@ -106,9 +108,8 @@ int init_board_by_user( Board *board )
 
 int init_view( Window *view, Board *board )
 {
-    // int window_height, window_width;
-    // SDL_GL_GetDrawableSize( window, &window_width, &window_height );
-    // view->cell_size = ( board->columns / board->rows > window_width / window_height ) ? window_width / board->columns : window_height / board->rows;
+    if ( view == NULL || board == NULL )
+        return EXIT_FAILURE;
     view->cell_size = 17;
     view->window_height = ( view->cell_size * board->rows ) + 40;
     view->window_width = view->cell_size * board->columns;
@@ -118,7 +119,6 @@ int init_view( Window *view, Board *board )
     view->min_movement_speed_in_pixels = view->movement_speed_in_cells * view->cell_size;
     const int BOARD_HEIGHT = view->window_height / 4;
     const int BOARD_WIDTH = view->window_width / 4;
-    // The starting position of the camera
     view->camera_x = ( BOARD_WIDTH - view->width_in_cells ) / 2;
     view->camera_y = ( BOARD_HEIGHT - view->height_in_cells ) / 2;
     return EXIT_SUCCESS;
@@ -145,12 +145,14 @@ void draw_board( Board* b, Window *view, SDL_Renderer* renderer )
             SDL_RenderDrawRect( renderer, &rectangle );
         }
     }
-    // Draw the renderer to the screen
-    // SDL_RenderPresent( renderer );
 }
 
 inline int count_neighbors( Board *b, int row, int col )
 {
+    if ( b == NULL )
+        return EXIT_FAILURE;
+    if ( row < 0 || row >= b->rows || col < 0 || col >= b->columns )
+        return EXIT_FAILURE;
     int count = 0;
     for ( int i = row -1 ; i <= row + 1; i++ )
     {
@@ -214,6 +216,8 @@ int update_next_generation( Board *b )
 
 int clear_all_cells( Board *b )
 {
+    if ( b == NULL )
+        return EXIT_FAILURE;
     for ( int i = 0; i < b->rows; i++ )
     {
         for ( int j = 0; j < b->columns; j++ )

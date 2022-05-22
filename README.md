@@ -14,9 +14,11 @@
 
 ### Run the game
 
-If you have a working SDL2 evironment for this repo, you can run `sh run.sh` to boot the game.
+If you have a working SDL2 evironment for this repo, you can run `sh run.sh` to boot the game.  
+This shell will automatically compile the program (if necessary) and run it.
 
-If you want to run the test module, you can use: `sh test.sh`.
+If you want to run the test module, you can use: `sh test.sh`.  
+This shell will automatically compile the test program (if necessary) and run the unit test.
 
 > Be aware that this repo uses symbolic link to import the SDL2 library, so a cloned repo might not work out of the box on a different device. If you want to configure this repo on your device, run the following code in your terminal or shell:
 >

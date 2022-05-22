@@ -99,7 +99,7 @@ int main( int argc, char** argv )
             SDL_Quit();
             return EXIT_FAILURE;
         }
-        SDL_SetWindowIcon( window, IMG_Load( "resources/images/game_of_life.png" ) );
+        SDL_SetWindowIcon( window, IMG_Load( "resources/images/life.png" ) );
 
         // Create renderer
         Uint32 render_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;

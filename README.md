@@ -28,6 +28,6 @@ This shell will automatically compile the test program (if necessary) and run th
 
 
 
-### Commit history
+### What is looks like
+<img width="707" alt="截屏2022-05-25 21 24 49" src="https://user-images.githubusercontent.com/89094576/170272795-efd31e30-ba27-4eb6-a8e7-06e037457820.png">
 
-![github com_YuelinXin_C_Project_2_commits_main](https://user-images.githubusercontent.com/89094576/169660990-66b3088f-3666-4e14-a38e-2d74016219f0.png)

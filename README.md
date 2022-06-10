@@ -8,7 +8,7 @@
 
 ### URL of this repo
 
-> [YuelinXin_GameOfLife](https://github.com/YuelinXin/C_Project_2)
+> [YuelinXin_GameOfLife](https://github.com/YuelinXin/GameOfLife)
 
 
 

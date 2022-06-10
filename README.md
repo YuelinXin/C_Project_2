@@ -1,4 +1,4 @@
-# C Project 2 - Game of Life
+# Game of Life (Using C and SDL2)
 
 ### Intro
 

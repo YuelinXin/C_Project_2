@@ -74,7 +74,7 @@ typedef struct
 } Window;
 
 
-/** Define all the function prototypes **/
+/** Declare all the function prototypes **/
 /* Initialize the board with the given configuration file and data file 
     *
     * @param config_file: the name of the configuration file

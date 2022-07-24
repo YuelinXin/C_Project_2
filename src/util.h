@@ -30,7 +30,7 @@
 #define File_IO_Err "[Err] File could not be accessed, check:\n-> Does file exist?\n-> Directory/file name correct?\n-> Is file corrupted?\n"
 
 
-/** Define all the function prototypes **/
+/** Declare all the function prototypes **/
 /* Read binary files to the int buffer 
     *
     * @param filename: the name of the file to be read

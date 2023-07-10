@@ -4,7 +4,7 @@
 This repo is a C implementation of the famous cellur automaton Conway's Game of Life. It uses the SDL2 library to visualize the game.
 
 ### URL of this repo 🌐
-> [**YuelinXin**/GameOfLife](https://github.com/YuelinXin/GameOfLife)
+> [**YuelinXin**/game-of-life](https://github.com/YuelinXin/game-of-life)
 
 ### Run the game ▶️
 If you have a working SDL2 evironment for this repo, you can run `sh run.sh` to boot the game.  
